@@ -155,7 +155,7 @@ schedule.scheduleJob(rule, async () => {
         jobLogPool.query(`
         UPDATE daily_jobs
         SET last_ran='${moment().format('YYYY-MM-DD')}'
-        WHERE name='transfers_job'
+        WHERE name='circ_job'
         `, (jobLogErr, _next) => {
           if (jobLogErr) console.log(jobLogErr);
           else console.log('Updated JobLog with last_ran date');
