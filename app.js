@@ -22,6 +22,7 @@ const circController = require('./controllers/circreport');
 
 // db pools
 const circPool = require('./dbs/circreport');
+const jobLogPool = require('./dbs/joblog');
 
 const app = express();
 
@@ -149,6 +150,17 @@ schedule.scheduleJob(rule, async () => {
       circClient.release();
 
       console.log(Chalk.green('---Job finished---'));
+
+      if (!development) {
+        jobLogPool.query(`
+        UPDATE daily_jobs
+        SET last_ran='${moment().format('YYYY-MM-DD')}'
+        WHERE name='transfers_job'
+        `, (jobLogErr, _next) => {
+          if (jobLogErr) console.log(jobLogErr);
+          else console.log('Updated JobLog with last_ran date');
+        });
+      }
     });
   } catch (e) {
     console.log(Chalk.red('There was an error...'));
