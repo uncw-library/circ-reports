@@ -44,7 +44,7 @@ const getITypes = () => {
     WHEN itype_code_num = 24 THEN 'Course Reserves'
     WHEN itype_code_num = 11 THEN 'Course Reserves'
     WHEN itype_code_num = 105 THEN 'Course Reserves'
-    ELSE 'Special'
+    ELSE 'Other'
   END AS rec_type
 
   FROM sierra_view.circ_trans
