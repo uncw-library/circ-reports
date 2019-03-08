@@ -2,6 +2,10 @@ const development = (process.env.NODE_ENV !== 'production');
 
 const createError = require('http-errors');
 const express = require('express');
+const session = require('cookie-session');
+const helmet = require('helmet');
+const passport = require('passport');
+const LdapStrategy = require('passport-ldapauth').Strategy;
 const exphbs = require('express-handlebars');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -24,6 +28,9 @@ const circController = require('./controllers/circreport');
 const circPool = require('./dbs/circreport');
 const jobLogPool = require('./dbs/joblog');
 
+// ldap config
+const opts = require('./auth/ldap');
+
 const app = express();
 
 // view engine setup
@@ -35,6 +42,34 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// use cookies for our sessions
+app.use(session({
+  keys: ['cookie-session-tac', 'dockerisawesome-tac', 'webwizards-tac'],
+
+  // cookie Options
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+}));
+
+// use helmet for added security
+app.use(helmet());
+
+// configure passport to use LDAP for auth
+passport.use(new LdapStrategy(opts));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// user object serialization
+passport.serializeUser((user, done) => {
+  done(null, user.dn);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
@@ -74,6 +109,10 @@ if (development) {
 schedule.scheduleJob(rule, async () => {
   try {
     console.log(Chalk.green('---Job started---'));
+
+    if (development) {
+      console.log(Chalk.yellow('In development mode. No records will actually be inserted/manipulated. This is for testing only.'));
+    }
 
     // let's go ahead and create clients for our connection pool
     // we will release them after the job is complete :)
@@ -120,20 +159,24 @@ schedule.scheduleJob(rule, async () => {
       if (matchingTransaction) {
         // we found a matching transaction.
         // increment the transaction amount by 1
-        await circController.incrementTransaction(
-          matchingTransaction.id,
-          matchingTransaction.transactions,
-          circClient,
-        );
+        if (!development) {
+          await circController.incrementTransaction(
+            matchingTransaction.id,
+            matchingTransaction.transactions,
+            circClient,
+          );
+        }
 
         incrementedCount += 1;
       } else {
         // we couldn't find a matching transaction.
         // insert a new record
-        await circController.insertTransaction(
-          newTransaction,
-          circClient,
-        );
+        if (!development) {
+          await circController.insertTransaction(
+            newTransaction,
+            circClient,
+          );
+        }
 
         insertCount += 1;
       }

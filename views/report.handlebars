@@ -1,0 +1,111 @@
+<script>
+    $(document).ready(function(){
+       $('#tac-circ-data').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+              'pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'
+          ],
+          "order": [[ 0, "desc" ]],
+        });
+
+        $("#tac-circ-data").append(
+            $('<tfoot style="text-align:right;"/>').append( '<tr><td></td><td></td><td><strong>Total Transactions: {{totalTransactions}}</strong></td><td></td></tr>' )
+        );
+        $('.datepicker').datepicker();
+    });
+</script>
+
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <h1>{{title}}</h1>
+    </div>
+</div>
+
+
+<form method="GET">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <input class="form-control datepicker" type="text" name="startDate" value="{{startDate}}" />
+        </div>
+        <div class="col-auto">
+            <label><strong>through</strong></label>
+        </div>
+        <div class="col-auto">
+            <input class="form-control datepicker" type="text" name="endDate" value="{{endDate}}" />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <input type="submit" value="Filter" class="btn btn-primary"/>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-6">
+        <canvas id="myChart" height="200" style="border:solid 1px #ccc"></canvas>
+        <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Books/AV", "Course Reserves", "Equipment"],
+                datasets: [{
+                    label: '# of Checkouts',
+                    data: [{{totalBooksAV}}, {{totalCourseReserves}}, {{totalEquipment}}],
+                    backgroundColor: [
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+
+                    ],
+                    borderColor: [
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255,99,132,1)',
+                        'rgba(75, 192, 192, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+    </div>
+</div>
+
+<div class="col-12">
+    <table id="tac-circ-data" class="table table-bordered">
+        <thead>
+            <th>I Type</th>
+            <th>IType Code Num</th>
+            <th>Quantity</th>
+            <th>Percentage</th>
+        </thead>
+        <tbody>
+        {{#each transactions}}
+            <tr>
+                <td>{{this.iTypeName}}</td>
+                <td>{{this.recType}}</td>
+                <td>{{this.total}}</td>
+                <td>{{this.percentage}}%</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <button onclick="location.href='/logout';" type="button" class="btn btn-danger btn-block">Logout</button>
+    </div>
+</div>
