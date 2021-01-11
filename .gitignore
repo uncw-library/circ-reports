@@ -78,3 +78,9 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+.env
+package-lock.json
+node-modules/
+
+db_autoimport/

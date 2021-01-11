@@ -4,8 +4,8 @@ const ldap = {
     bindDN: process.env.LDAP_USER,
     bindCredentials: process.env.LDAP_PASS,
     searchBase: 'dc=uncw,dc=edu',
-    searchFilter: '(&(sAMAccountName={{username}})(memberOf=CN=Library,OU=LIB,OU=AA,OU=Faculty-Staff,DC=uncw,DC=edu))',
-  },
-};
+    searchFilter: '(&(sAMAccountName={{username}})(memberOf=CN=Library,OU=LIB,OU=AA,OU=Faculty-Staff,DC=uncw,DC=edu))'
+  }
+}
 
-module.exports = ldap;
+module.exports = ldap

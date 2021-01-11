@@ -1,29 +1,22 @@
-FROM node:alpine
+FROM node:15-alpine
 
-# Install base packages
 RUN apk update && \
   apk upgrade && \
-  apk add ca-certificates && update-ca-certificates
+  apk add ca-certificates && update-ca-certificates && \
+  apk add tzdata g++ gcc libgcc libstdc++ linux-headers make python && \
+  npm install --quiet node-gyp -g
 
-# Change TimeZone
-RUN apk add --update tzdata
 ENV TZ=America/New_York
 
-# Clean APK cache
 RUN rm -rf /var/cache/apk/*
 
-#create app directory
 WORKDIR /usr/src/
-
-# Install app dependencies
 COPY package.json .
 RUN npm install
 
-# Bundle app source
-COPY . .
+COPY --chown=node:node app/ ./app
+WORKDIR /usr/src/app/
 
-# Listen on port 3000
 EXPOSE 3000
 
-# Start the web server
-CMD ["npm", "start"]
+CMD npm start

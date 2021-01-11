@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  circ-reports-db:
+    image: postgres:10.2
+    container_name: circ-reports-db
+    env_file: .env
+    environment:
+      POSTGRES_DB: circ-reports
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db_autoimport:/docker-entrypoint-initdb.d/
+    networks:
+      - circ-reports_network
+    ports:
+      - 8030:5432
+    restart: always
+
+  circ-reports:
+    build: .
+    container_name: circ-reports
+    env_file: .env
+    volumes: 
+      - ./app:/usr/src/app
+    networks:
+      - circ-reports_network
+    depends_on: 
+      - circ-reports-db
+    ports:
+      - 3001:3000
+    command: npm run dev
+    restart: always
+
+volumes:
+  postgres_data:
+
+networks:
+  circ-reports_network:
+    driver: bridge
