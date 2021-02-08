@@ -18,18 +18,33 @@ services:
       - 8030:5432
     restart: always
 
-  circ-reports:
-    build: .
-    container_name: circ-reports
+  circ-reports-webapp:
+    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp:latest
+    build: ./webapp
+    container_name: circ-reports-webapp
     env_file: .env
     volumes: 
-      - ./app:/usr/src/app
+      - ./webapp/app:/usr/src/app
     networks:
       - circ-reports_network
     depends_on: 
       - circ-reports-db
     ports:
       - 3001:3000
+    command: npm run dev
+    restart: always
+
+  circ-reports-job:
+    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job:latest
+    build: ./job
+    container_name: circ-reports-job
+    env_file: .env
+    volumes: 
+      - ./job/app:/usr/src/app
+    networks:
+      - circ-reports_network
+    depends_on: 
+      - circ-reports-db
     command: npm run dev
     restart: always
 

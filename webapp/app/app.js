@@ -12,9 +12,6 @@ const session = require('cookie-session')
 const indexRouter = require('./routes/index')
 const ldapConfigs = require('./auth/ldap')
 
-// run the job script in the background
-require('./job')
-
 const app = express()
 
 app.set('views', path.join(__dirname, 'views'))
@@ -34,7 +31,6 @@ app.use(session({
 passport.use(new LdapStrategy(ldapConfigs))
 app.use(passport.initialize())
 app.use(passport.session())
-// user object serialization
 passport.serializeUser((user, done) => {
   done(null, user.dn)
 })

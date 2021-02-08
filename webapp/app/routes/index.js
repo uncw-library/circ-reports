@@ -83,7 +83,7 @@ router.get('/report', ensureAuthenticated, async (req, res, _next) => {
     (num, transaction) => (transaction.recType === 'Equipment' ? Number(transaction.total) + num : num), 0
   )
 
-  res.render('report', {
+  const payload = {
     layout: 'layout',
     title: 'Checkouts by Type',
     startDate,
@@ -93,7 +93,9 @@ router.get('/report', ensureAuthenticated, async (req, res, _next) => {
     totalBooksAV,
     totalCourseReserves,
     totalEquipment
-  })
+  }
+
+  res.render('report', payload)
 })
 
 module.exports = router
