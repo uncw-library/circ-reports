@@ -1,42 +1,52 @@
 version: '2'
 
 services:
-  circ-reports-db-backup:
-    image: libapps-admin.uncw.edu:8000/randall-dev/postgres-sidekick:latest
-    environment:
-      PG_PASSWORD: 'ChangeMe!'
-      DB_HOST: circ-reports-db
-      DB_NAME: circ-reports
-    stdin_open: true
-    volumes:
-    - /home/randall/volumes/backups/Backups/circ-reports:/backups
-    tty: true
-  circ-reports:
-    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports
+  circ-reports-job:
+    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job:latest
     environment:
       NODE_ENV: production
-      DB_USER: 'ChangeMe!'
-      DB_PASS: 'ChangeMe!'
-      SIERRA_USER: 'ChangeMe!'
-      SIERRA_PASS: 'ChangeMe!'
-      LDAP_USER: 'ChangeMe!'
-      LDAP_PASS: 'ChangeMe!'
-      MASTER_DB_USER: 'ChangeMe!'
-      MASTER_DB_PASS: 'ChangeMe!'
+      DB_USER: CHANGEME
+      DB_PASS: CHANGEME
+      SIERRA_USER: CHANGEME
+      SIERRA_PASS: CHANGEME
+      MASTER_DB_USER: CHANGEME
+      MASTER_DB_PASS: CHANGEME
     stdin_open: true
+    tty: true
     external_links:
     - master-db/master-db:master-db
+  circ-reports-webapp:
+    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp:latest
+    environment:
+      NODE_ENV: production
+      DB_USER: CHANGEME
+      DB_PASS: CHANGEME
+      SIERRA_USER: CHANGEME
+      SIERRA_PASS: CHANGEME
+      LDAP_USER: CHANGEME
+      LDAP_PASS: CHANGEME
+    stdin_open: true
     tty: true
   circ-reports-db:
     image: postgres:10.2
     environment:
-      POSTGRES_PASSWORD: 'ChangeMe!'
+      POSTGRES_PASSWORD: CHANGEME
     stdin_open: true
+    tty: true
     volumes:
     - /home/randall/volumes/circ-reports/:/var/lib/postgresql/data
-    tty: true
     ports:
     - 8036:5432/tcp
     labels:
       io.rancher.container.pull_image: always
       io.rancher.sidekicks: circ-reports-db-backup
+  circ-reports-db-backup:
+    image: libapps-admin.uncw.edu:8000/randall-dev/postgres-sidekick:latest
+    environment:
+      PG_PASSWORD: CHANGEME
+      DB_HOST: circ-reports-db
+      DB_NAME: circ-reports
+    stdin_open: true
+    tty: true
+    volumes:
+    - /home/randall/volumes/backups/Backups/circ-reports:/backups

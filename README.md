@@ -1,7 +1,11 @@
 Circ-Reports
 
-A node job that runs every weekday at 0500.  It transfers library fines & notifies people.
-And an Express app with ldap login & a page at https://localhost:3001/report
+Two apps in one repo: job & webapp.  Each gets their own container.  This app is unusual for having two app containers.  Each may be revised & pushed independently.  The docker-compose dev box works as a single unit.
+
+The node job runs every weekday at 0500.  It transfers library fines & notifies people.
+The Express app with ldap login & a page at https://localhost:3001/report
+
+Job code is in folder ./job/app, and webapp code is in folder ./webapp/app.
 
 ## Dev box
 
@@ -9,14 +13,14 @@ And an Express app with ldap login & a page at https://localhost:3001/report
 
 ```
 NODE_ENV=development
-DB_USER=ChangeMe!
-DB_PASS=ChangeMe!
-SIERRA_USER=ChangeMe!
-SIERRA_PASS=ChangeMe!
-LDAP_USER=ChangeMe!
-LDAP_PASS=ChangeMe!
-MASTER_DB_USER=ChangeMe!
-MASTER_DB_PASS=ChangeMe!
+DB_USER=CHANGEME
+DB_PASS=CHANGEME
+SIERRA_USER=CHANGEME
+SIERRA_PASS=CHANGEME
+LDAP_USER=CHANGEME
+LDAP_PASS=CHANGEME
+MASTER_DB_USER=CHANGEME
+MASTER_DB_PASS=CHANGEME
 ```
 
    2)  Put a circ-reports db dump at circ-reports/db_autoimport/file.sql
@@ -29,7 +33,7 @@ MASTER_DB_PASS=ChangeMe!
 
       All the other db connections are readonly.  (Sierra & libapps-staff master db)
 
-   4) Run the dev box:  `docker-compose up`
+   4) Run the dev box:  `docker-compose up --build`
 
       Any code changes in ./transfers/app/ folder will live update inside the box.  It will also restart the program.
 
@@ -47,15 +51,17 @@ MASTER_DB_PASS=ChangeMe!
 
 ## Build the image
 
-   When your dev box seems right, 
+   When your dev box seems right, build & push each of the containers (or only the one you revised).
 
    ```
-   docker build --no-cache -t libapps-admin.uncw.edu:8000/randall-dev/circ-reports .
-   docker push libapps-admin.uncw.edu:8000/randall-dev/circ-reports
+   docker build --no-cache -t libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job ./job/
+   docker build --no-cache -t libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp ./webapp/
+   docker push libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp
+   docker push libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job
    ```
 
-   And update Rancher
+   And update Rancher services, or only the one you revised.
 
 ## Production
 
-   Works the same as dev, but pushes changes to libapps-staff 'circ-reports' db.
+   Works the same as dev, but pushes changes to libapps-staff master-db 'circ-reports' db & writes to joblog.
