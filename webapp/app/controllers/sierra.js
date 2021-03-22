@@ -21,6 +21,7 @@ const getITypes = () => {
       WHEN itype_code_num = 4 THEN 'Books/AV'
       WHEN itype_code_num = 5 THEN 'Books/AV'
       WHEN itype_code_num = 6 THEN 'Books/AV'
+      WHEN itype_code_num = 8 THEN 'Books/AV'
       WHEN itype_code_num = 118 THEN 'Books/AVs'
       WHEN itype_code_num = 10 THEN 'Course Reserves'
       WHEN itype_code_num = 24 THEN 'Course Reserves'
