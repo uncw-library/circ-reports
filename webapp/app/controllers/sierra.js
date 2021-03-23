@@ -32,6 +32,9 @@ const getITypes = () => {
   FROM sierra_view.circ_trans
   LEFT JOIN sierra_view.itype_property_myuser
     ON sierra_view.itype_property_myuser.code = sierra_view.circ_trans.itype_code_num
+  WHERE substr(item_location_code,1,1) = 'w'
+    AND substr(item_location_code,1,2) != 'wc'
+    AND substr(item_location_code,1,2)!='we'
   GROUP BY itype_code_num
   `
   return sierra.query(sql)
