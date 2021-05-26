@@ -11,7 +11,8 @@ const pool = new Pool({
   host: 'circ-reports-db',
   max: 1,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 36000
+  connectionTimeoutMillis: 36000,
+  application_name: 'circ-reports-webapp'
 })
 
 module.exports = {

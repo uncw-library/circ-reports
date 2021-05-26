@@ -19,7 +19,7 @@ services:
     restart: always
 
   circ-reports-webapp:
-    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp:latest
+    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp
     build: ./webapp
     container_name: circ-reports-webapp
     env_file: .env
@@ -35,7 +35,7 @@ services:
     restart: always
 
   circ-reports-job:
-    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job:latest
+    image: libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job
     build: ./job
     container_name: circ-reports-job
     env_file: .env
