@@ -23,15 +23,15 @@ MASTER_DB_USER=CHANGEME
 MASTER_DB_PASS=CHANGEME
 ```
 
-   2)  Put a circ-reports db dump at circ-reports/db_autoimport/file.sql
+   2)  Put a circ-reports db dump at circ-reports/db_autoimport/circ-reports.sql
 
-      Get the Transfers db dump using command `pg_dump -h libapps-staff.uncw.edu -p 8020 -U postgres transfers > transfers_db_autoimport/transfers.sql`
+      Get the Transfers db dump using command `pg_dump -h libapps-staff.uncw.edu -p 8036 -U postgres circ-reports > db_autoimport/circ-reports.sql`
 
    How the dev box doesn't write to real databases:
 
       The docker-compose will create a 'circ-reports' db on your local computer.  It will write to it instead of the production 'circ-reports' db.
 
-      All the other db connections are readonly.  (Sierra & libapps-staff master db)
+      All the other db connections are read-only.  (Sierra & libapps-staff master db)
 
    4) Run the dev box:  `docker-compose up --build`
 
