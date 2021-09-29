@@ -4,7 +4,11 @@ Two apps in one repo: job & webapp.  Job is in ./job/app, and webapp is in ./web
 
 Each gets their own container.  This app is unusual for having two app containers.  Each may be revised & pushed independently.  The docker-compose dev box works as a single unit.
 
-The node job runs every weekday at 0500.  It transfers library fines & notifies people.
+The node job runs every weekday at 0500.
+The app reads sierra db for actions that happened in the previous day, then writes the output to the circ-reports db.
+
+Warning:  If the production app runs twice in one day, it will write double the # of 'transactions' in circ-reports db for that day.
+
 The Express app with ldap login & a page at https://localhost:3001/report
 
 
