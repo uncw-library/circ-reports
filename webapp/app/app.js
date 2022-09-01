@@ -1,5 +1,5 @@
 const express = require('express')
-const exphbs = require('express-handlebars')
+const hbs = require('express-handlebars').create
 const cookieParser = require('cookie-parser')
 const createError = require('http-errors')
 const helmet = require('helmet')
@@ -15,7 +15,7 @@ const ldapConfigs = require('./auth/ldap')
 const app = express()
 
 app.set('views', path.join(__dirname, 'views'))
-app.engine('handlebars', exphbs({ defaultLayout: 'layout' }))
+app.engine('handlebars', hbs({ defaultLayout: 'layout' }).engine)
 app.set('view engine', 'handlebars')
 
 app.use(logger('dev'))
