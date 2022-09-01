@@ -68,7 +68,8 @@ router.get('/report', ensureAuthenticated, async (req, res, _next) => {
     iTypeName: R.path(['name'], itypes.find(type => type.itype_code_num === transaction.itype_code_num)),
     recType: R.path(['rec_type'], itypes.find(type => type.itype_code_num === transaction.itype_code_num)),
     percentage: (totalTransactions > 0)
-      ? (transaction.total / totalTransactions * 100).toFixed(2) : 0
+      ? (transaction.total / totalTransactions * 100).toFixed(2)
+      : 0
   }))
 
   const totalBooksAV = transactions.reduce(

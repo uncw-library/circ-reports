@@ -1,4 +1,3 @@
-const moment = require('moment')
 const sierra = require('../dbs/sierra')
 
 const getITypes = () => {

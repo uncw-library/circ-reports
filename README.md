@@ -9,7 +9,7 @@ The app reads sierra db for actions that happened in the previous day, then writ
 
 Warning:  If the production app runs twice in one day, it will write double the # of 'transactions' in circ-reports db for that day.
 
-The Express app with ldap login & a page at https://localhost:3001/report
+The Express app with ldap login & a page at https://localhost:3000/report
 
 
 ## Build the image
@@ -17,8 +17,8 @@ The Express app with ldap login & a page at https://localhost:3001/report
     When your dev box seems right, build & push each of the containers (or only the one you revised).
 
     ```
-    docker build --no-cache -t libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job ./job/
-    docker build --no-cache -t libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp ./webapp/
+    docker build --no-cache --platform linux/x86_64/v8 -t libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job ./job/
+    docker build --no-cache --platform linux/x86_64/v8 -t libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp ./webapp/
     docker push libapps-admin.uncw.edu:8000/randall-dev/circ-reports/job
     docker push libapps-admin.uncw.edu:8000/randall-dev/circ-reports/webapp   
     ```
@@ -43,7 +43,7 @@ The Express app with ldap login & a page at https://localhost:3001/report
 
     2)  Put a circ-reports db dump at circ-reports/db_autoimport/circ-reports.sql
 
-    Get the Transfers db dump using command `pg_dump -h libapps-staff.uncw.edu -p 8036 -U postgres circ-reports > db_autoimport/circ-reports.sql`
+    Get the db dump using command `pg_dump -h libapps-staff.uncw.edu -p 8036 -U postgres circ-reports > db_autoimport/circ-reports.sql`
 
     How the dev box doesn't write to real databases:
 
@@ -67,6 +67,20 @@ The Express app with ldap login & a page at https://localhost:3001/report
 
     On second run, there's nothing left to process.  So, we have to `docker-compose down` `docker volume rm circ-reports_postgres_data` to reset the local db.
 
+
+### updating
+
+```
+npm install
+npm audit
+```
+
+### linting
+
+```
+npm install
+npx standard
+```
 
 ## Production
 
