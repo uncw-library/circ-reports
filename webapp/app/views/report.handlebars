@@ -21,6 +21,16 @@
     </div>
 </div>
 
+{{#if errorMessage}}
+    <div class="row justify-content-center">
+        <div class="col">
+            <div class="alert alert-danger" role="alert">
+                <strong>Whoops...</strong> {{errorMessage}}
+            </div>
+        </div>
+    </div>
+{{/if}}
+
 
 <form method="GET">
     <div class="row justify-content-center">

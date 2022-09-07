@@ -51,9 +51,21 @@ router.get('/logout', (req, res) => {
 // GET /report. This will be where the main report is generated
 router.get('/report', ensureAuthenticated, async (req, res, _next) => {
   let { startDate, endDate } = req.query
+  let errorMessage
 
-  startDate = startDate || moment().subtract(1, 'day').format('YYYY-MM-DD')
-  endDate = endDate || moment().format('YYYY-MM-DD')
+  // if date info is invalid format, then give an error && clear the value
+  if (!moment(startDate, 'MM/DD/YYYY', true).isValid()) {
+    startDate = undefined
+    errorMessage = 'dates need to be in MM/DD/YYYY'
+  }
+  if (!moment(endDate, 'MM/DD/YYYY', true).isValid()) {
+    endDate = undefined
+    errorMessage = 'dates need to be in MM/DD/YYYY'
+  }
+
+  // if no date info sent in request or was bad format, then default to today & yesterday
+  startDate = startDate || moment().subtract(1, 'day').format('MM/DD/YYYY')
+  endDate = endDate || moment().format('MM/DD/YYYY')
 
   const itypes = R.path(['rows'], await sierraController.getITypes())
   let transactions = R.path(['rows'], await circReportController.getTransactionsByDate(startDate, endDate))
@@ -93,7 +105,8 @@ router.get('/report', ensureAuthenticated, async (req, res, _next) => {
     totalTransactions,
     totalBooksAV,
     totalCourseReserves,
-    totalEquipment
+    totalEquipment,
+    errorMessage
   }
 
   res.render('report', payload)
