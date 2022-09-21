@@ -11,7 +11,7 @@ const development = (process.env.NODE_ENV !== 'production')
 
 const rule = new schedule.RecurrenceRule()
 if (development) {
-  // run in 5 seconds
+  run in 5 seconds
   rule.hour = new Date().getHours()
   rule.minute = new Date().getMinutes()
   rule.second = new Date().getSeconds() + 5
@@ -51,7 +51,8 @@ schedule.scheduleJob(rule, async () => {
       item_record_id: transaction.item_record_id,
       item_location_code: transaction.item_location_code,
       ptype_code: transaction.ptype_code,
-      name
+      name,
+      application_name: transaction.application_name
     }
 
     const matchingTransaction = R.path(['rows', 0], (await circController.getMatchingTransaction(newTransaction)))
@@ -71,7 +72,7 @@ schedule.scheduleJob(rule, async () => {
       // we couldn't find a matching transaction.
       // insert a new record
       if (development) {
-        console.log(`would have inserted into circ-reports: ${newTransaction}`)
+        console.log(`would have inserted into circ-reports: ${JSON.stringify(newTransaction)}`)
       }
       if (!development) {
         circController.insertTransaction(newTransaction)

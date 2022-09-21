@@ -11,7 +11,8 @@ function getData () {
       sierra_view.circ_trans.itype_code_num,
       item_location_code,
       ptype_code,sierra_view.circ_trans.itype_code_num,
-      name
+      name,
+      application_name
     FROM sierra_view.circ_trans
 
     LEFT JOIN sierra_view.itype_property_myuser
